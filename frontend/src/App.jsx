@@ -26,10 +26,25 @@ function UploadImage() {
   };
 
   return (
+<<<<<<< Updated upstream
     <form onSubmit={handleSubmit}>
       <input type="file" onChange={handleImageChange} accept="image/*" />
       <button type="submit">Upload Image</button>
     </form>
+=======
+    <div>
+      <header>
+        <nav>
+          <button onClick={() => handlePageChange("camera")}>Camera</button>
+          <button onClick={() => handlePageChange("pokedex")}>Pokedex</button>
+        </nav>
+      </header>
+      <Collection />
+      {page === "collection" && <Collection />}
+      {page === "camera" && <CameraPage />}
+      {page === "pokedex" && <Pokedex />}
+    </div>
+>>>>>>> Stashed changes
   );
 }
 
