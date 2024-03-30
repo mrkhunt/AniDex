@@ -49,7 +49,6 @@ function App() {
 
   return (
     <div>
-      {page === "camera" ? <CameraPage /> : <Pokedex />}
       <header>
         <div
           style={{
