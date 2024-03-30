@@ -8,6 +8,8 @@ import axios from "axios";
 const CameraPage = () => {
   const videoRef = useRef(null);
   const photoRef = useRef(null);
+  const [lat, setLat] = useState(null);
+  const [long, setLong] = useState(null);
 
   const [image, setImage] = useState(null);
   const [hasPhoto, setHasPhoto] = useState(false);
@@ -27,6 +29,15 @@ const CameraPage = () => {
       .catch((err) => {
         console.error("Error getting video stream:", err);
       });
+  };
+
+  const getUserLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log("Latitude:", position.coords.latitude);
+      console.log("Longitude:", position.coords.longitude);
+      setLat(position.coords.latitude);
+      setLong(position.coords.longitude);
+    });
   };
 
   const takePhoto = () => {
@@ -68,10 +79,16 @@ const CameraPage = () => {
 
   const sendPhotoToBackend = async () => {
     try {
+      let date = new Date().toISOString();
+
       console.log("Sending photo to backend...");
+
       const response = await axios
         .post("/api/saveImage", {
           imageBase64: image,
+          lat: lat,
+          long: long,
+          date: date,
         })
         .then((response) => {
           toaster.push(
@@ -93,11 +110,32 @@ const CameraPage = () => {
     getVideo();
   }, [videoRef]);
 
+  // When user opens page, capture lat long
+  useEffect(() => {
+    try {
+      getUserLocation();
+    } catch (error) {
+      console.error("Error getting location:", error);
+      alert.error(
+        "Error getting location, try enabling permissions and refreshing the page."
+      );
+    }
+  }, []);
+
   return (
     <div>
       {!hasPhoto && (
         <div>
-          <video ref={videoRef} width="400" height="400" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <video ref={videoRef} width="400" height="400" />
+          </div>
 
           <div
             style={{
@@ -118,7 +156,16 @@ const CameraPage = () => {
         </div>
       )}
       <div>
-        <canvas ref={photoRef} height="0" />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            marginTop: "10px",
+          }}
+        >
+          <canvas ref={photoRef} height="0" />
+        </div>
         {hasPhoto && (
           <div
             style={{
