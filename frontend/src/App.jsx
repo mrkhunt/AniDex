@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Pokedex from "./Pokedex";
 
 function UploadImage() {
   const [image, setImage] = useState("");
@@ -29,6 +30,7 @@ function UploadImage() {
     <form onSubmit={handleSubmit}>
       <input type="file" onChange={handleImageChange} accept="image/*" />
       <button type="submit">Upload Image</button>
+      <Pokedex />
     </form>
   );
 }
