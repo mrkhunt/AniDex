@@ -79,6 +79,8 @@ const CameraPage = () => {
               Added to AnyDex!
             </Message>
           );
+          alert("Added to AnyDex!");
+
           redoPhoto();
           console.log("Image saved successfully:", response.data);
         });
