@@ -49,13 +49,13 @@ function App() {
 
   return (
     <div>
+      {page === "camera" ? <CameraPage /> : <Pokedex />}
       <header>
         <nav>
           <button onClick={() => handlePageChange("camera")}>Camera</button>
           <button onClick={() => handlePageChange("pokedex")}>Pokedex</button>
         </nav>
       </header>
-      {page === "camera" ? <CameraPage /> : <Pokedex />}
     </div>
   );
 }
