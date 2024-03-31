@@ -18,8 +18,7 @@ const Chatbox = ({ currentImage }) => {
       // Send a request to the API endpoint to generate an initial message
       const response = await axios.get("/api/generateStory", {
         params: {
-          prompt:
-            "Hello, please limit all your future responses to 5 lines max",
+          prompt: `Hello, you are very specifically a ${currentImage.name} specialist in animal conservation. You are talking to students to engage them about SDGs so you are to be as concise as possible. Please reply this message with an introduction of your self and your animal.`,
         }, // Provide a default prompt here
       });
       const { story } = response.data;

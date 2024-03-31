@@ -271,6 +271,7 @@ app.get("/api/generateStory", async (req, res) => {
     // Get prompt from query parameters
     const prompt = req.query.prompt;
     console.log("Prompt:", prompt);
+    console.log(req.query.currentImage);
 
     // Generate story based on the prompt
     const generatedContent = await generateStory(prompt);
