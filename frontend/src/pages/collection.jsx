@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function Collection(setCurrentImage, setCurrentPage) {
+function Collection({ setCurrentImage }) {
   const [display, setDisplay] = useState("All");
   const [imageUrls, setImages] = useState([]);
 
@@ -54,24 +54,22 @@ function Collection(setCurrentImage, setCurrentPage) {
                   style={{ backgroundColor: image.color }}
                   key={index}
                 >
-                  <button
-                    className="mx-auto"
-                    onClick={() => handleClickSprite(image)}
-                  >
-                    <img
-                      src={`data:image/png;base64,${image.spriteImageBase64Json}`}
-                      alt={image.name}
-                      className="mb-0 pb-0 rounded-t-lg "
-                    />
-                    <div className="bg-green-500 rounded-b-lg w-full">
-                      <p className="text-base font-mono font-bold m-0 p-0 text-gray-900 bg">
-                        {image.name}
-                      </p>
-                      <p className="text-sm font-mono m-0 p-0 text-gray-900 bg">
-                        Type: {image.type}
-                      </p>
-                    </div>
-                  </button>
+                  <img
+                    src={`data:image/png;base64,${image.spriteImageBase64Json}`}
+                    alt={image.name}
+                    className="mb-0 pb-0 rounded-t-lg "
+                    onClick={() => {
+                      handleClickSprite(image);
+                    }}
+                  />
+                  <div className="bg-green-500 rounded-b-lg w-full">
+                    <p className="text-base font-mono font-bold m-0 p-0 text-gray-900 bg">
+                      {image.name}
+                    </p>
+                    <p className="text-sm font-mono m-0 p-0 text-gray-900 bg">
+                      Type: {image.type}
+                    </p>
+                  </div>
                 </div>
               </div>
             );

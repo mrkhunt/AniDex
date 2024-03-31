@@ -23,7 +23,7 @@ const Pokedex = ({ currentImage }) => {
         </div>
       </div>
       <div className="m-5">
-        <Chatbox />
+        <Chatbox currentImage={currentImage} />
       </div>
     </div>
   );
