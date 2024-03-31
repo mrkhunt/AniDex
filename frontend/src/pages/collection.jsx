@@ -2,9 +2,8 @@ import React, { Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function Collection() {
+function Collection(setCurrentImage, setCurrentPage) {
   const [display, setDisplay] = useState("All");
-
   const [imageUrls, setImages] = useState([]);
 
   useEffect(() => {
@@ -16,6 +15,11 @@ function Collection() {
       })
       .catch((error) => console.error("Error fetching images:", error));
   }, []);
+
+  const handleClickSprite = (image) => {
+    console.log("Image clicked:", image);
+    setCurrentImage(image);
+  };
 
   // type property should display based on filter
   return (
@@ -52,7 +56,7 @@ function Collection() {
                 >
                   <button
                     className="mx-auto"
-                    onClick={() => console.log("clicked")}
+                    onClick={() => handleClickSprite(image)}
                   >
                     <img
                       src={`data:image/png;base64,${image.spriteImageBase64Json}`}

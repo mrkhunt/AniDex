@@ -4,14 +4,16 @@ import ChatBubbleRespond from "../components/ChatBubbleRespond";
 import InfoTag from "../components/InfoTag";
 import Chatbox from "../components/Chatbox";
 
-const Pokedex = () => {
-
+const Pokedex = ({ currentImage }) => {
   return (
     <div className="">
       <div className="flex aspect-auto justify-between bg-orange-300 p-4">
-        <img src="/character.png" className="bg-slate-50 rounded-md aspect-square max-h-[100px]" />
+        <img
+          src="/character.png"
+          className="bg-slate-50 rounded-md aspect-square max-h-[100px]"
+        />
         <div>
-          <InfoTag />
+          <InfoTag text={"hi"} />
           <InfoTag />
           <InfoTag />
           <InfoTag />

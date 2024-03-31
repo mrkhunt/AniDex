@@ -13,6 +13,15 @@ function App() {
   const [page, setPage] = useState("camera");
   const [isMuted, setIsMuted] = useState(true);
   const [audio] = useState(new Audio("/public/bg.mp3"));
+  const [currentImage, setCurrentImage] = useState(null);
+
+  useEffect(() => {
+    console.log("current image is changed");
+    if (currentImage) {
+      console.log("there is current image");
+      setPage("pokedex");
+    }
+  }, [currentImage]);
 
   useEffect(() => {
     // Ensure audio is muted initially if isMuted is true
@@ -110,7 +119,10 @@ function App() {
       </div>
 
       {page === "camera" && <CameraPage />}
-      {page === "collection" && <Collection />}
+      {page === "collection" && (
+        <Collection setCurrentImage={setCurrentImage} />
+      )}
+      {page === "pokedex" && <Pokedex currentImage={currentImage} />}
       <footer className="fixed bottom-0 m-1 w-full mx-auto">
         <nav className="flex flex-row justify-evenly">
           <div class=" w-1/2 text-5xl flex bg-gray-300 p-4 rounded-lg border-solid border-zinc-500 border-4">
