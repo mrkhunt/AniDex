@@ -20,6 +20,7 @@ const port = process.env.PORT || 8080;
 
 // Load all API keys
 import dotenv from "dotenv";
+import { log } from "console";
 dotenv.config();
 // Reverse geocoding API key from env
 const geocodeApiKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -130,13 +131,28 @@ app.post("/api/saveImage", async (req, res) => {
   let geminiReturnObject = await generateContent();
   let geminiResponseObject;
   try {
+    console.log(
+      "Gemini response text:",
+      geminiReturnObject.candidates[0].content.parts[0].text
+    );
     geminiResponseObject = JSON.parse(
       geminiReturnObject.candidates[0].content.parts[0].text
     );
   } catch (error) {
-    console.error("Error parsing Gemini response:", error);
-    console.log(geminiReturnObject);
-    return res.status(500).send("Error parsing Gemini response");
+    try {
+      // Remove ```json and ``` from the string
+      const jsonString = geminiReturnObject.candidates[0].content.parts[0].text;
+      const cleanedString = jsonString
+        .replace("```json", "")
+        .replace("```", "")
+        .replace("```", "");
+      console.log("Cleaned JSON string:", cleanedString);
+      geminiResponseObject = JSON.parse(cleanedString);
+    } catch {
+      console.error("Error parsing Gemini response:", error);
+      console.log(geminiReturnObject);
+      return res.status(500).send("Error parsing Gemini response");
+    }
   }
 
   // Generate Sprite Image using DALLE-2
@@ -144,9 +160,9 @@ app.post("/api/saveImage", async (req, res) => {
   const response = await openai.images.generate({
     model: "dall-e-2",
     prompt:
-      "pixel image of a " +
+      "low res pixel image of a " +
       geminiResponseObject.name +
-      "against a white background",
+      "with a white background",
     n: 1,
     size: "256x256",
     response_format: "b64_json",
@@ -190,7 +206,7 @@ app.post("/api/saveImage", async (req, res) => {
 
   try {
     // Save image data to Firebase
-    const docRef = await addDoc(collection(db, "images"), {
+    const docRef = await addDoc(collection(db, "test"), {
       imageBase64: imageBase64,
       lat: lat,
       long: long,
@@ -222,38 +238,13 @@ app.post("/api/saveImage", async (req, res) => {
   }
 });
 
-// app.get("/api/generateStory", async (req, res) => {
-//   try {
-//     // Define prompt and generate story
-//     const prompt = req.query.prompt;
-//     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-//     const result = await model.generateContent(prompt);
-//     const response = await result.response;
-//     const text = await response.text();
-
-//     // Send the generated story in the response
-//     res.send({ success: true, story: text });
-//   } catch (error) {
-//     console.error("Error generating story:", error);
-//     res.status(500).send("Error generating story");
-//   }
-// });
-
-// app.post("/api/saveChat", async (req, res) => {
-//   try {
-//     const { chatlog } = req.body;
-
-//     // Assuming `chatlog` is an array of chat messages
-//     // Iterate through each message and save it to Firestore
-//     for (const message of chatlog) {
-//       // Add the message to the "chatlog" collection in Firestore
-//       await addDoc(collection(db, "chatlog"), message);
-//     }
-
-//     console.log("Chat log saved successfully");
-//     res.send({ success: true, message: "Chat log saved successfully" });
-//   } catch (error) {
-//     console.error("Error saving chat log:", error);
-//     res.status(500).send("Error saving chat log");
-//   }
-// });
+app.get("/api/getpokeimages", async (req, res) => {
+  const pokeImages = [];
+  const q = query(collection(db, "test"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    pokeImages.push(data);
+  });
+  res.send(pokeImages);
+});

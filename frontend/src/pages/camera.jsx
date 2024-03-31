@@ -14,6 +14,7 @@ const CameraPage = () => {
   const [image, setImage] = useState(null);
   const [hasPhoto, setHasPhoto] = useState(false);
 
+  
 
   const getVideo = () => {
     navigator.mediaDevices
@@ -119,7 +120,9 @@ const CameraPage = () => {
       getUserLocation();
     } catch (error) {
       console.error("Error getting location:", error);
-      alert.error("Error getting location, try enabling permissions and refreshing the page.");
+      alert.error(
+        "Error getting location, try enabling permissions and refreshing the page."
+      );
     }
   }, []);
 
@@ -138,7 +141,10 @@ const CameraPage = () => {
 
           <div className="flex justify-center gap-10 mt-10">
             <Button appearance="ghost" onClick={takePhoto}>
-              <Icon style={{ color: "black", marginRight: "1em" }} as={FaCamera} />
+              <Icon
+                style={{ color: "black", marginRight: "1em" }}
+                as={FaCamera}
+              />
               SNAP
             </Button>
           </div>
@@ -157,7 +163,11 @@ const CameraPage = () => {
             <Button appearance="primary" color="red" onClick={redoPhoto}>
               <Icon as={FaRedo} /> Redo
             </Button>
-            <Button appearance="primary" color="green" onClick={() => sendPhotoToBackend()}>
+            <Button
+              appearance="primary"
+              color="green"
+              onClick={() => sendPhotoToBackend()}
+            >
               <Icon as={FaCheck} /> Confirm
             </Button>
           </div>

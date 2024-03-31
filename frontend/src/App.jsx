@@ -41,6 +41,7 @@ import Pokedex from "./pages/pokedex";
 import { Button, Col } from "rsuite";
 import Collection from "./pages/collection";
 import { MdCatchingPokemon } from "react-icons/md";
+import { IoMdFolderOpen } from "react-icons/io";
 
 function App() {
   const [page, setPage] = useState("camera");
@@ -54,23 +55,23 @@ function App() {
       <h1 className="text-7xl font-black text-green-500 text-center backdrop-blur-sm p-4">
         AniDex
       </h1>
-      {page === "camera" ? <CameraPage /> : <Collection />}
-      <footer className="fixed bottom-0 m-6 w-full mx-auto bg-transparent">
-        <nav className="flex flex-row">
-          <div class="gap-10 text-5xl w-full flex justify-center">
+      {page === "camera" && <CameraPage />}
+      {page === "collection" && <Collection />}
+      <footer className="fixed bottom-0 m-6 w-full mx-auto">
+        <nav className="flex flex-row  gap-10 justify-evenly">
+          <div class=" text-5xl justify-center size-fit bg-slate-50 p-4 rounded-2xl border-solid border-2 border-zinc-800">
             <MdCatchingPokemon
               size={80}
               onClick={() => handlePageChange("camera")}
-              className="hover:fill-green-300 hover:scale-125"
+              className="hover:fill-red-300 hover:scale-125"
             />
           </div>
-          <div>
-            <Button
-              onClick={() => handlePageChange("collect")}
-              className="absolute right-0 h-full w-[150px]"
-            >
-              Collect
-            </Button>
+          <div class="text-5xl justify-center size-fit bg-slate-50 p-4 rounded-2xl border-solid border-2 border-zinc-800">
+            <IoMdFolderOpen
+              size={80}
+              onClick={() => handlePageChange("collection")}
+              className="hover:fill-red-300 hover:scale-125"
+            />
           </div>
         </nav>
       </footer>
