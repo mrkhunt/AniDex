@@ -45,7 +45,7 @@ const Chatbox = () => {
                         {typeof message.text === "object" ? (
                             // If it's an object, render each part of the story
                             message.text.parts.map((part, partIndex) => (
-                                <ChatBubble name={"SQuirrel"} time={"11"} text={part.text} />
+                                <ChatBubble name={"Squirrel"} time={"11"} text={part.text} />
 
                             ))
                         ) : (
