@@ -103,6 +103,8 @@ const CameraPage = () => {
         });
     } catch (error) {
       console.error("Error saving image:", error);
+      alert("Please try again!");
+      redoPhoto();
     }
   };
 

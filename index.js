@@ -1,5 +1,6 @@
 import express from "express";
 import { VertexAI } from "@google-cloud/vertexai";
+import OpenAI from "openai";
 
 const app = express();
 app.use(express.json({ limit: "10mb" }));
@@ -17,7 +18,16 @@ import {
 } from "firebase/firestore";
 const port = process.env.PORT || 8080;
 
-// Gemini Code
+// Load all API keys
+import dotenv from "dotenv";
+dotenv.config();
+// Reverse geocoding API key from env
+const geocodeApiKey = process.env.GOOGLE_MAPS_API_KEY;
+const openaiAPIKey = process.env.OPENAI_API_KEY;
+
+// OpenAI init
+const openai = new OpenAI(openaiAPIKey);
+
 // Initialize Vertex with your Cloud project and location
 const vertex_ai = new VertexAI({
   project: "genesisai-418720",
@@ -54,10 +64,6 @@ const generativeModel = vertex_ai.preview.getGenerativeModel({
   ],
 });
 
-// Load all API keys
-import dotenv from "dotenv";
-dotenv.config();
-
 const firebaseConfig = {
   apiKey: "AIzaSyAHV0TnOOOuax-DJPjLvgTW-wB7qfvqp_Y",
   authDomain: "genesisai-418720.firebaseapp.com",
@@ -70,9 +76,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-
-// Reverse geocoding API key from env
-const geocodeApiKey = process.env.GOOGLE_MAPS_API_KEY;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
@@ -105,11 +108,15 @@ app.post("/api/saveImage", async (req, res) => {
           parts: [
             image,
             {
-              text: `Look at this object. Return me strictly the name of this thing as well as classify it as whether it is an animal or object. Please return strictly a JSON object with the keys name and type (object or animal). Your return must start and end with curly braces only.`,
+              text: `Look at this object. Find me the name of this thing as well as classify whether it is an animal or object. If it is an animal, the name of it must be a specific species of this animal. Additionally, I would like you to derive what surroundings(sea, forest, desert, arctic) this thing is usually found in and extract the set the colour based on that surroundings(STRICTLY blue for sea, green for forest, brown for desert, white for arctic). Please return strictly a JSON object with the keys name, type (object or animal) and colour of the surroundings. Your return must strictly start and end with curly braces only. The format of return has the keys : name: name of thing, type: type, colour: colour of surroundings.
+              `,
             },
           ],
         },
       ],
+      generationConfig: {
+        temperature: 0.0,
+      },
     };
 
     const streamingResp = await generativeModel.generateContentStream(req);
@@ -121,10 +128,31 @@ app.post("/api/saveImage", async (req, res) => {
   let stringLocation = "";
 
   let geminiReturnObject = await generateContent();
+  let geminiResponseObject;
+  try {
+    geminiResponseObject = JSON.parse(
+      geminiReturnObject.candidates[0].content.parts[0].text
+    );
+  } catch (error) {
+    console.error("Error parsing Gemini response:", error);
+    console.log(geminiReturnObject);
+    return res.status(500).send("Error parsing Gemini response");
+  }
 
-  let geminiResponseObject = JSON.parse(
-    geminiReturnObject.candidates[0].content.parts[0].text
-  );
+  // Generate Sprite Image using DALLE-2
+
+  const response = await openai.images.generate({
+    model: "dall-e-2",
+    prompt:
+      "pixel image of a " +
+      geminiResponseObject.name +
+      "against a white background",
+    n: 1,
+    size: "256x256",
+    response_format: "b64_json",
+  });
+
+  const spriteImageBase64Json = response.data[0].b64_json;
 
   // Get the string location data using Google API
   const geocodingURL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${geocodeApiKey}`;
@@ -156,6 +184,8 @@ app.post("/api/saveImage", async (req, res) => {
     formattedAddress: stringLocation,
     name: geminiResponseObject.name,
     type: geminiResponseObject.type,
+    color: geminiResponseObject.colour,
+    spriteImageBase64Json: spriteImageBase64Json,
   });
 
   try {
@@ -168,6 +198,8 @@ app.post("/api/saveImage", async (req, res) => {
       formattedAddress: stringLocation,
       name: geminiResponseObject.name,
       type: geminiResponseObject.type,
+      colour: geminiResponseObject.colour,
+      spriteImageBase64Json: spriteImageBase64Json,
     });
     console.log("Image saved successfully:", docRef.id);
 
