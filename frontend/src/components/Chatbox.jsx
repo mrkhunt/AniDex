@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./chatbox.css";
 import axios from "axios";
 import ChatBubble from "./ChatBubble";
@@ -8,9 +8,31 @@ const Chatbox = () => {
     const [chat, setChat] = useState('');
     const [log, setLog] = useState([]);
 
+    useEffect(() => {
+        // Simulate a message from the chatbot when the component mounts
+        initiateChat();
+    }, []); // Empty dependency array ensures this effect runs only once on mount
+
+    const initiateChat = async () => {
+        try {
+            // Send a request to the API endpoint to generate an initial message
+            const response = await axios.get("/api/generateStory", {
+                params: { prompt: 'Hello, please limit all your future responses to 5 lines max' } // Provide a default prompt here
+            });
+            const { story } = response.data;
+
+            // Add the chatbot's initial message to the messages
+            const initialChatbotMessage = { text: story, sender: "chatbot" };
+            setLog(prevLog => [...prevLog, initialChatbotMessage]);
+        } catch (error) {
+            console.error("Error generating initial message:", error);
+        }
+    };
+
+
     const handleChange = (e) => {
-        setChat(e.target.value)
-    }
+        setChat(e.target.value);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,27 +63,22 @@ const Chatbox = () => {
             <div className="chat-container">
                 {log.map((message, index) => (
                     <div key={index} className={`message ${message.sender}`}>
-                        {/* Check if message text is an object */}
                         {typeof message.text === "object" ? (
-                            // If it's an object, render each part of the story
                             message.text.parts.map((part, partIndex) => (
-                                <ChatBubble name={"Squirrel"} time={"11"} text={part.text} />
-
+                                <ChatBubble key={partIndex} text={part.text} />
                             ))
                         ) : (
-                            // If it's not an object, just render the text
-
-                            <ChatBubbleRespond time={"11"} text={message.text} />
+                            <ChatBubbleRespond key={index} text={message.text} />
                         )}
                     </div>
                 ))}
             </div>
             <form className="forms" onSubmit={handleSubmit}>
-                <input class="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="chatbox-input" type="text" placeholder="Questions..." value={chat} onChange={handleChange} />
+                <input className="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="chatbox-input" type="text" placeholder="Questions..." value={chat} onChange={handleChange} />
                 <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ask</button>
             </form>
         </>
-    )
+    );
 }
 
 export default Chatbox;

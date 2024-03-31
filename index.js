@@ -190,28 +190,32 @@ app.post("/api/saveImage", async (req, res) => {
   }
 });
 
+async function generateStory(prompt) {
+  try {
+    // Generate story based on the prompt
+    const result = await chat.sendMessageStream(prompt);
+    const response = (await result.response).candidates[0].content;
+
+    return response;
+  } catch (error) {
+    throw new Error("Error generating story: " + error);
+  }
+}
 
 app.get("/api/generateStory", async (req, res) => {
   try {
-    // Define prompt
+    // Get prompt from query parameters
     const prompt = req.query.prompt;
     console.log("Prompt:", prompt);
 
-    // Generate story based on the prompt using the instantiated generative model
-    const model = vertex_ai.preview.getGenerativeModel({ model: "gemini-pro" });
-    const result = await model.generateContent(prompt);
-    const response = result.response;
+    // Generate story based on the prompt
+    const generatedContent = await generateStory(prompt);
 
     // Send the generated story in the response
-    if (response.candidates && response.candidates.length > 0) {
-      // Access the first candidate's content
-      const generatedContent = response.candidates[0].content;
-      console.log("Generated Content:", generatedContent);
-      res.send({ success: true, story: generatedContent });
-    }
+    res.json({ success: true, story: generatedContent });
   } catch (error) {
     console.error("Error generating story:", error);
-    res.status(500).send("Error generating story");
+    res.status(500).json({ success: false, error: "Error generating story" });
   }
 });
 
@@ -233,3 +237,33 @@ app.post("/api/saveChat", async (req, res) => {
     res.status(500).send("Error saving chat log");
   }
 });
+
+const text1_1 = {
+  text: `Your name is {animal}, greet and refer the audience as Dexplorer. To begin, introduce yourself as {animal} specialist and tell users a fun fact about yourself. Keep your introduction to 4 lines and all your responses to 5 lines max. You should know a lot about yourself and every aspect of the animal you are including:
+
+vulnerability (endangerment) habitat weight/height specie diet life span`};
+
+const chat = generativeModel.startChat({});
+
+async function sendMessage(message) {
+  const streamResult = await chat.sendMessageStream(message);
+  process.stdout.write('stream result: ' + JSON.stringify((await streamResult.response).candidates[0].content) + '\n');
+}
+
+
+async function generateContent() {
+  await sendMessage([
+    text1_1
+  ]);
+  await sendMessage([
+    { text: `tell me about your habitat` }
+  ]);
+  await sendMessage([
+    { text: `what is your diet` }
+  ]);
+  await sendMessage([
+    { text: `do you apply in urban areas` }
+  ]);
+}
+
+generateContent();
