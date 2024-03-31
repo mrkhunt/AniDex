@@ -20,10 +20,6 @@ const Pokedex = () => {
           <InfoTag />
         </div>
       </div>
-      <div>
-        <ChatBubble />{" "}
-        <ChatBubbleRespond />{" "}
-      </div>
       <div className="m-5">
         <Chatbox />
       </div>
