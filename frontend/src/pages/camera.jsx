@@ -141,23 +141,21 @@ const CameraPage = () => {
               ref={videoRef}
               width={window.innerWidth}
               height={window.innerHeight}
-              className="rounded-2xl max-w-[80vw] max-h-[60vh]"
+              className="rounded-2xl max-w-[80vw] max-h-[400px]"
             />
           </div>
 
-          <div className="flex justify-center gap-10 mt-10">
-            <Button appearance="ghost" onClick={takePhoto}>
-              <Icon
-                style={{ color: "black", marginRight: "1em" }}
-                as={FaCamera}
-              />
-              SNAP
-            </Button>
+          <div className="flex justify-center gap-10 mt-10 text-xl">
+            <button
+              onClick={takePhoto}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              <Icon className="mr-2" as={FaCamera} /> Snap
+            </button>
           </div>
         </div>
       )}
-
-      <div className="flex justify-center gap-3 mt-8 rounded-2xl">
+      <div className="flex justify-center gap-3 mt-8 rounded-lg">
         <canvas
           ref={photoRef}
           height={0}
@@ -166,21 +164,22 @@ const CameraPage = () => {
           }`}
         />
       </div>
-
       {hasPhoto && !loading && (
         <div>
-          <div className="flex justify-center gap-10 mt-10">
-            <Button appearance="primary" color="red" onClick={redoPhoto}>
-              <Icon as={FaRedo} /> Redo
-            </Button>
-            <Button
-              appearance="primary"
-              color="green"
-              onClick={() => sendPhotoToBackend()}
-              loading={loading}
+          <div className="flex justify-center gap-10 mt-10 text-xl">
+            <button
+              onClick={redoPhoto}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
             >
-              <Icon as={FaCheck} /> Confirm
-            </Button>
+              <Icon as={FaRedo} className="mr-2" /> Redo
+            </button>
+
+            <button
+              onClick={() => sendPhotoToBackend()}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              <Icon as={FaCheck} className="mr-2" /> Confirm
+            </button>
           </div>
         </div>
       )}
