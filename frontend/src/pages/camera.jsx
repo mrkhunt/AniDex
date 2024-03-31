@@ -14,6 +14,7 @@ const CameraPage = () => {
   const [image, setImage] = useState(null);
   const [hasPhoto, setHasPhoto] = useState(false);
 
+
   const getVideo = () => {
     navigator.mediaDevices
       .getUserMedia({
@@ -118,78 +119,51 @@ const CameraPage = () => {
       getUserLocation();
     } catch (error) {
       console.error("Error getting location:", error);
-      alert.error(
-        "Error getting location, try enabling permissions and refreshing the page."
-      );
+      alert.error("Error getting location, try enabling permissions and refreshing the page.");
     }
   }, []);
 
   return (
-    <div>
+    <div className="h-screen flex flex-col items-center">
       {!hasPhoto && (
         <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <video ref={videoRef} width="400" height="400" />
+          <div className="flex justify-center gap-3 mt-8 mb-3 bg-transparent">
+            <video
+              ref={videoRef}
+              width={window.innerWidth}
+              height={window.innerHeight}
+              className="rounded-2xl max-w-[80vw] max-h-[60vh]"
+            />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
+          <div className="flex justify-center gap-10 mt-10">
             <Button appearance="ghost" onClick={takePhoto}>
-              <Icon
-                style={{ color: "black", marginRight: "1em" }}
-                as={FaCamera}
-              />
+              <Icon style={{ color: "black", marginRight: "1em" }} as={FaCamera} />
               SNAP
             </Button>
           </div>
         </div>
       )}
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-          }}
-        >
-          <canvas ref={photoRef} height="0" />
-        </div>
-        {hasPhoto && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
+      <div className="flex justify-center gap-3 mt-8 rounded-2xl">
+        <canvas
+          ref={photoRef}
+          height={0}
+          className="max-w-[80vw] max-h-[60vh] aspect-auto rounded-2xl"
+        />
+      </div>
+      {hasPhoto && (
+        <div>
+          <div className="flex justify-center gap-10 mt-10">
             <Button appearance="primary" color="red" onClick={redoPhoto}>
               <Icon as={FaRedo} /> Redo
             </Button>
-            <Button
-              appearance="primary"
-              color="green"
-              onClick={() => sendPhotoToBackend()}
-            >
+            <Button appearance="primary" color="green" onClick={() => sendPhotoToBackend()}>
               <Icon as={FaCheck} /> Confirm
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+      <div className="h-[80px]"></div>
     </div>
   );
 };

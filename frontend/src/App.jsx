@@ -38,7 +38,9 @@
 import React, { useState } from "react";
 import CameraPage from "./pages/camera";
 import Pokedex from "./pages/pokedex";
-import { Button } from "rsuite";
+import { Button, Col } from "rsuite";
+import Collection from "./pages/collection";
+import { MdCatchingPokemon } from "react-icons/md";
 
 function App() {
   const [page, setPage] = useState("camera");
@@ -48,36 +50,29 @@ function App() {
   };
 
   return (
-    <div>
-      <header>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <h1>AnimaDex</h1>
-        </div>
-      </header>
-      {page === "camera" ? <CameraPage /> : <Pokedex />}
-      <footer>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <nav>
-            <Button onClick={() => handlePageChange("camera")}>Camera</Button>
-            <Button onClick={() => handlePageChange("pokedex")}>Pokedex</Button>
-          </nav>
-        </div>
+    <div className="bg-gradient-to-r from-green-100 to-emerald-300">
+      <h1 className="text-7xl font-black text-green-500 text-center backdrop-blur-sm p-4">
+        AniDex
+      </h1>
+      {page === "camera" ? <CameraPage /> : <Collection />}
+      <footer className="fixed bottom-0 m-6 w-full mx-auto bg-transparent">
+        <nav className="flex flex-row">
+          <div class="gap-10 text-5xl w-full flex justify-center">
+            <MdCatchingPokemon
+              size={80}
+              onClick={() => handlePageChange("camera")}
+              className="hover:fill-green-300 hover:scale-125"
+            />
+          </div>
+          <div>
+            <Button
+              onClick={() => handlePageChange("collect")}
+              className="absolute right-0 h-full w-[150px]"
+            >
+              Collect
+            </Button>
+          </div>
+        </nav>
       </footer>
     </div>
   );

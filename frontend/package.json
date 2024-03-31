@@ -19,7 +19,8 @@
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.3",
     "react-webcam": "^7.2.0",
-    "rsuite": "^5.58.1"
+    "rsuite": "^5.58.1",
+    "tailwindcss-bg-patterns": "^0.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
