@@ -109,7 +109,7 @@ app.post("/api/saveImage", async (req, res) => {
           parts: [
             image,
             {
-              text: `Look at this thing. Find me the name of this thing as well as classify whether it is an animal or object. If it is an animal, the name of it must be a specific species of this animal. Additionally, I would like you to derive what surroundings(sea, forest, desert, arctic) this thing is usually found in and extract the set the colour based on that surroundings(STRICTLY blue for sea, green for forest, brown for desert, white for arctic). If it is an object, the colour will be white. Please return strictly a JSON object with the keys name, type (object or animal) and colour of the surroundings. Your return must strictly start and end with curly braces only. The format of return has the keys : name: name of thing, type: type, colour: colour of surroundings.
+              text: `Look at this animal. Find me the name of the specific species of this animal as well as classify whether it is a land animal or a sea animal. Additionally, I would like you to derive what surroundings(sea, forest, desert, arctic) this thing is usually found in and extract the set the colour based on that surroundings(STRICTLY blue for sea, green for forest, brown for desert, white for arctic). Please return strictly a JSON object with the keys name, type (object or animal) and colour of the surroundings. Additionally, for this animal, assess it's vulnerability such as whether it is a least concern,less vulnerable, vulnerable, endangered or critically endangered species. Furthermore, you should also find the usual height, weight and lifespan for this particular animal. Your return must strictly start and end with curly braces only. The format of return has the keys : height: height of animal, weight: weight of animal, lifespan: lifespan of animal, name: name of animal, type: type, colour: colour of surroundings, vulnerability: level of vulnerability.
               `,
             },
           ],
@@ -218,6 +218,10 @@ app.post("/api/saveImage", async (req, res) => {
       type: geminiResponseObject.type,
       colour: geminiResponseObject.colour,
       spriteImageBase64Json: spriteImageBase64Json,
+      height: geminiResponseObject.height,
+      weight: geminiResponseObject.weight,
+      lifespan: geminiResponseObject.lifespan,
+      vulnerability: geminiResponseObject.vulnerability,
     });
     console.log("Image saved successfully:", docRef.id);
 
