@@ -2,8 +2,10 @@ import React from "react";
 import ChatBubble from "../components/ChatBubble";
 import ChatBubbleRespond from "../components/ChatBubbleRespond";
 import InfoTag from "../components/InfoTag";
+import Chatbox from "../components/Chatbox";
 
 const Pokedex = () => {
+
   return (
     <div className="">
       <div className="flex aspect-auto justify-between bg-orange-300 p-4">
@@ -18,9 +20,8 @@ const Pokedex = () => {
           <InfoTag />
         </div>
       </div>
-      <div>
-        <ChatBubble />{" "}
-        <ChatBubbleRespond />{" "}
+      <div className="m-5">
+        <Chatbox />
       </div>
     </div>
   );
