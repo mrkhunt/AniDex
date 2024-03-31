@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function Collection({ setCurrentImage }) {
-  const [display, setDisplay] = useState("All");
+  const [display, setDisplay] = useState("all");
   const [imageUrls, setImages] = useState([]);
 
   useEffect(() => {

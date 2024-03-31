@@ -12,7 +12,7 @@ import "./fonts/font.otf";
 function App() {
   const [page, setPage] = useState("camera");
   const [isMuted, setIsMuted] = useState(true);
-  const [audio] = useState(new Audio("/public/bg.mp3"));
+  const [audio] = useState(new Audio("/bg.mp3"));
   const [currentImage, setCurrentImage] = useState(null);
 
   useEffect(() => {
