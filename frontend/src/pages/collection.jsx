@@ -27,26 +27,26 @@ function Collection({ setCurrentImage }) {
       <ul className="w-full">
         <button
           className="w-1/3 font-mono border-solid border-2 border-slate-400 bg-white py-5 text-lg font-bold"
-          onClick={() => setDisplay("Land")}
+          onClick={() => setDisplay("land")}
         >
           Land
         </button>
         <button
           className="w-1/3 font-mono order-solid border-2 border-slate-400 bg-white py-5 text-lg font-bold"
-          onClick={() => setDisplay("Aquatic")}
+          onClick={() => setDisplay("sea")}
         >
-          Aquatic
+          Sea
         </button>
         <button
           className="w-1/3 font-mono border-solid border-2 border-slate-400 bg-white py-5 text-lg font-bold"
-          onClick={() => setDisplay("All")}
+          onClick={() => setDisplay("all")}
         >
           All
         </button>
       </ul>
-      <div className="flex flex-wrap" id="All-Objects">
+      <div className="flex flex-wrap min-h-dvh" id="All-Objects">
         {imageUrls.map((image, index) => {
-          if (display === image.type || display === "All") {
+          if (display === image.type || display === "all") {
             return (
               <div className="w-1/2">
                 <div
@@ -78,6 +78,7 @@ function Collection({ setCurrentImage }) {
           }
         })}
       </div>
+      <div className="h-[100px] w-[100px] bg-transparent"></div>
     </div>
   );
 }

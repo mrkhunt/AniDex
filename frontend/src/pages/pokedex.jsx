@@ -20,13 +20,14 @@ const Pokedex = ({ currentImage }) => {
           <InfoTag text={"Lifespan: " + currentImage.lifespan} />
           <InfoTag text={"Vulnerability: " + currentImage.vulnerability} />
         </div>
-        <div>
-          <p>
-            Last met: {currentImage.formattedAddress} on {currentImage.date}
-          </p>
-        </div>
       </div>
-      <div className="m-5">
+      <div className="bg-orange-300 p-4">
+        <p>
+          Last met: <b>{currentImage.formattedAddress}</b> on{" "}
+          <b>{currentImage.date}</b>
+        </p>
+      </div>
+      <div className="mb-[150px]">
         <Chatbox currentImage={currentImage} />
       </div>
     </div>
