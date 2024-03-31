@@ -93,7 +93,7 @@ function App() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-green-100 to-emerald-300">
+    <div className="hh bg-gradient-to-r from-green-100 to-emerald-300">
       <div className="flex items-center justify-center">
         <h1
           style={{

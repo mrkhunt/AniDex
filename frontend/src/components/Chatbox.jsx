@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./chatbox.css";
 import axios from "axios";
 import ChatBubble from "./ChatBubble";
 import ChatBubbleRespond from "./ChatBubbleRespond";
@@ -74,9 +73,9 @@ const Chatbox = ({ currentImage }) => {
           </div>
         ))}
       </div>
-      <form className="forms fixed bottom-[120px]" onSubmit={handleSubmit}>
+      <form className="fixed bottom-[120px] justify-center mx-auto left-[20vw] gap-4" onSubmit={handleSubmit}>
         <input
-          className="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="chatbox-input"
           type="text"
           placeholder="Questions..."
