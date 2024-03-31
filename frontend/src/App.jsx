@@ -1,83 +1,145 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-
-// function UploadImage() {
-//   const [image, setImage] = useState("");
-
-//   const handleImageChange = (e) => {
-//     const file = e.target.files[0];
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onloadend = () => {
-//       setImage(reader.result);
-//     };
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post("/api/saveImage", {
-//         imageBase64: image,
-//       });
-//       console.log("Image saved successfully:", response.data);
-//     } catch (error) {
-//       console.error("Error saving image:", error);
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <input type="file" onChange={handleImageChange} accept="image/*" />
-//       <button type="submit">Upload Image</button>
-//     </form>
-//   );
-// }
-
-// export default UploadImage;
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CameraPage from "./pages/camera";
 import Pokedex from "./pages/pokedex";
-import { Button } from "rsuite";
+import { Button, Col } from "rsuite";
+import Collection from "./pages/collection";
+import { MdCatchingPokemon } from "react-icons/md";
+import { PiDog } from "react-icons/pi";
+import { set } from "date-fns";
+import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
+import "./fonts/font.otf";
 
 function App() {
   const [page, setPage] = useState("camera");
+  const [isMuted, setIsMuted] = useState(true);
+  const [audio] = useState(new Audio("/bg.mp3"));
+  const [currentImage, setCurrentImage] = useState(null);
+
+  useEffect(() => {
+    console.log("current image is changed");
+    if (currentImage) {
+      console.log("there is current image");
+      setPage("pokedex");
+    }
+  }, [currentImage]);
+
+  useEffect(() => {
+    // Ensure audio is muted initially if isMuted is true
+    audio.volume = 0;
+    if (!isMuted) {
+      handleStartMusic();
+    }
+    // Cleanup function to pause music when component unmounts
+    return () => {
+      audio.pause();
+    };
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Function to toggle mute state
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (isMuted) {
+      audio
+        .play()
+        .catch((error) => console.error("Error playing audio:", error));
+      let volume = 0;
+      audio.volume = volume;
+      const intervalId = setInterval(() => {
+        if (volume < 1) {
+          volume += 0.1;
+          audio.volume = Math.min(volume, 1);
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 200);
+    } else {
+      // Optional: Fade out volume before pausing for a smoother experience
+      let volume = audio.volume;
+      const intervalId = setInterval(() => {
+        if (volume > 0.1) {
+          volume -= 0.1;
+          audio.volume = volume;
+        } else {
+          clearInterval(intervalId);
+          audio.pause();
+          audio.currentTime = 0; // Optionally reset track to start
+          audio.volume = 1; // Reset volume for next play
+        }
+      }, 200);
+    }
+  };
+
+  const handleStartMusic = () => {
+    audio
+      .play()
+      .then(() => {
+        let volume = 0;
+        audio.volume = volume;
+        const intervalId = setInterval(() => {
+          if (volume <= 0.9) {
+            volume += 0.1;
+            audio.volume = volume;
+          } else {
+            clearInterval(intervalId);
+          }
+        }, 200); // Increase volume every 200ms
+      })
+      .catch((error) => console.error("Error playing audio:", error));
+    setPage("camera");
+  };
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
 
   return (
-    <div>
-      <header>
-        <div
+    <div className="hh bg-gradient-to-r from-green-100 to-emerald-300">
+      <div className="flex items-center justify-center">
+        <h1
           style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-            marginBottom: "10px",
+            fontFamily: "CustomFont",
           }}
+          className="text-7xl font-mono font-light text-green-800 backdrop-blur-sm p-4 mt-3"
         >
-          <h1>AnimaDex</h1>
-        </div>
-      </header>
-      {page === "camera" ? <CameraPage /> : <Pokedex />}
-      <footer>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <nav>
-            <Button onClick={() => handlePageChange("camera")}>Camera</Button>
-            <Button onClick={() => handlePageChange("pokedex")}>Pokedex</Button>
-          </nav>
-        </div>
+          ANIDEX
+        </h1>
+        {isMuted ? (
+          <MdVolumeOff
+            size={40}
+            onClick={toggleMute}
+            className="hover:fill-green-500 hover:scale-125 mt-3"
+          />
+        ) : (
+          <MdVolumeUp
+            size={40}
+            onClick={toggleMute}
+            className="hover:fill-green-500 hover:scale-125 mt-3"
+          />
+        )}
+      </div>
+
+      {page === "camera" && <CameraPage />}
+      {page === "collection" && (
+        <Collection setCurrentImage={setCurrentImage} />
+      )}
+      {page === "pokedex" && <Pokedex currentImage={currentImage} />}
+      <footer className="fixed bottom-0 m-1 w-full mx-auto">
+        <nav className="flex flex-row justify-evenly">
+          <div class=" w-1/2 text-5xl flex bg-gray-300 p-4 rounded-lg border-solid border-zinc-500 border-4">
+            <MdCatchingPokemon
+              size={50}
+              onClick={() => handlePageChange("camera")}
+              className="hover:fill-green-500 hover:scale-125 justify-center mx-auto"
+            />
+          </div>
+          <div class="w-1/2 text-5xl flex  bg-gray-300 p-4 rounded-lg border-solid border-zinc-500 border-4">
+            <PiDog
+              size={50}
+              onClick={() => handlePageChange("collection")}
+              className="hover:fill-green-500 hover:scale-125 justify-center mx-auto"
+            />
+          </div>
+        </nav>
       </footer>
     </div>
   );

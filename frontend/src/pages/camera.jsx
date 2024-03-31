@@ -14,10 +14,13 @@ const CameraPage = () => {
   const [image, setImage] = useState(null);
   const [hasPhoto, setHasPhoto] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const getVideo = () => {
     navigator.mediaDevices
       .getUserMedia({
         video: {
+          facingMode: "environment",
           width: 400,
           height: 400,
         },
@@ -68,6 +71,7 @@ const CameraPage = () => {
   };
 
   const redoPhoto = () => {
+    setLoading(false);
     setHasPhoto(false);
     // Clear the canvas if needed. Example:
     let photo = photoRef.current;
@@ -78,6 +82,7 @@ const CameraPage = () => {
   };
 
   const sendPhotoToBackend = async () => {
+    setLoading(true);
     try {
       let date = new Date().toISOString();
 
@@ -91,11 +96,6 @@ const CameraPage = () => {
           date: date,
         })
         .then((response) => {
-          toaster.push(
-            <Message type="success" closable>
-              Added to AnyDex!
-            </Message>
-          );
           alert("Added to AnyDex!");
 
           redoPhoto();
@@ -103,6 +103,8 @@ const CameraPage = () => {
         });
     } catch (error) {
       console.error("Error saving image:", error);
+      alert("Please try again!");
+      redoPhoto();
     }
   };
 
@@ -123,71 +125,66 @@ const CameraPage = () => {
   }, []);
 
   return (
-    <div>
-      {!hasPhoto && (
+    <div className="h-screen flex flex-col items-center">
+      {loading && (
+        <div className="flex flex-col justify-center items-center gap-3 mt-8 mb-3 bg-transparent">
+          <img
+            className="mt-6"
+            src="https://media.tenor.com/yRSnf6wABQ4AAAAi/pato-duck.gif"
+          />
+          <p className="text-2xl">Loading...</p>
+        </div>
+      )}
+      {!hasPhoto && !loading && (
         <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <video ref={videoRef} width="400" height="400" />
+          <div className="flex justify-center gap-3 mt-8 mb-3 bg-transparent">
+            <video
+              ref={videoRef}
+              width={window.innerWidth}
+              height={window.innerHeight}
+              className="rounded-2xl max-w-[80vw] max-h-[400px]"
+            />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <Button appearance="ghost" onClick={takePhoto}>
-              <Icon
-                style={{ color: "black", marginRight: "1em" }}
-                as={FaCamera}
-              />
-              SNAP
-            </Button>
+          <div className="flex justify-center gap-10 mt-10 text-xl">
+            <button
+              onClick={takePhoto}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              <Icon className="mr-2" as={FaCamera} /> Snap
+            </button>
           </div>
         </div>
       )}
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "10px",
-            marginTop: "10px",
-          }}
-        >
-          <canvas ref={photoRef} height="0" />
-        </div>
-        {hasPhoto && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <Button appearance="primary" color="red" onClick={redoPhoto}>
-              <Icon as={FaRedo} /> Redo
-            </Button>
-            <Button
-              appearance="primary"
-              color="green"
-              onClick={() => sendPhotoToBackend()}
-            >
-              <Icon as={FaCheck} /> Confirm
-            </Button>
-          </div>
-        )}
+      <div className="flex justify-center gap-3 mt-8 rounded-lg">
+        <canvas
+          ref={photoRef}
+          height={0}
+          className={`max-w-[80vw] max-h-[60vh] rounded-2xl ${
+            loading ? "hidden" : "block"
+          }`}
+        />
       </div>
+      {hasPhoto && !loading && (
+        <div>
+          <div className="flex justify-center gap-10 mt-10 text-xl">
+            <button
+              onClick={redoPhoto}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              <Icon as={FaRedo} className="mr-2" /> Redo
+            </button>
+
+            <button
+              onClick={() => sendPhotoToBackend()}
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+            >
+              <Icon as={FaCheck} className="mr-2" /> Confirm
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="h-[80px]"></div>
     </div>
   );
 };

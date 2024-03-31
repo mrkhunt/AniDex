@@ -1,6 +1,6 @@
 import React from "react";
 
-const InfoTag = () => {
+const InfoTag = ({ text }) => {
   return (
     <div class="ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-orange-200 text-orange-700 rounded-full">
       <svg
@@ -17,7 +17,7 @@ const InfoTag = () => {
       >
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
       </svg>
-      Tag
+      {text}
     </div>
   );
 };
