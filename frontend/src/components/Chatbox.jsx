@@ -17,7 +17,7 @@ const Chatbox = ({ currentImage }) => {
       // Send a request to the API endpoint to generate an initial message
       const response = await axios.get("/api/generateStory", {
         params: {
-          prompt: `Hello, you are very specifically a ${currentImage.name} specialist in animal conservation. You are talking to students to engage them about SDGs so you are to be as concise as possible. Please reply this message with an introduction of your self and your animal.`,
+          prompt: `Hello, you are very specifically a ${currentImage.name} specialist in animal conservation. You are talking to students to engage them about SDGs so you are to be as concise as possible. Please reply this message with a concise introduction of yourself and your animal. Strictly be concise in all of your subsequent replies. Concise in this case would mean in 3 sentences or less.`,
         }, // Provide a default prompt here
       });
       const { story } = response.data;
@@ -73,7 +73,10 @@ const Chatbox = ({ currentImage }) => {
           </div>
         ))}
       </div>
-      <form className="fixed bottom-[120px] justify-center mx-auto left-[20vw] gap-4" onSubmit={handleSubmit}>
+      <form
+        className="fixed bottom-[120px] justify-center mx-auto left-[20vw] gap-4"
+        onSubmit={handleSubmit}
+      >
         <input
           className="shadow appearance-none border rounded w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="chatbox-input"
