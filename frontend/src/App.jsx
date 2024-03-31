@@ -4,9 +4,10 @@ import Pokedex from "./pages/pokedex";
 import { Button, Col } from "rsuite";
 import Collection from "./pages/collection";
 import { MdCatchingPokemon } from "react-icons/md";
-import { IoMdFolderOpen } from "react-icons/io";
+import { PiDog } from "react-icons/pi";
 import { set } from "date-fns";
 import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
+import "./fonts/font.otf";
 
 function App() {
   const [page, setPage] = useState("camera");
@@ -85,8 +86,13 @@ function App() {
   return (
     <div className="bg-gradient-to-r from-green-100 to-emerald-300">
       <div className="flex items-center justify-center">
-        <h1 className="text-7xl font-mono font-light text-green-500 backdrop-blur-sm p-4">
-          AniDex
+        <h1
+          style={{
+            fontFamily: "CustomFont",
+          }}
+          className="text-7xl font-mono font-light text-green-800 backdrop-blur-sm p-4 mt-3"
+        >
+          ANIDEX
         </h1>
         {isMuted ? (
           <MdVolumeOff
@@ -115,7 +121,7 @@ function App() {
             />
           </div>
           <div class="w-1/2 text-5xl flex  bg-gray-300 p-4 rounded-lg border-solid border-zinc-500 border-4">
-            <IoMdFolderOpen
+            <PiDog
               size={50}
               onClick={() => handlePageChange("collection")}
               className="hover:fill-green-500 hover:scale-125 justify-center mx-auto"

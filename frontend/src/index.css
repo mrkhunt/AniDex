@@ -8,6 +8,11 @@
   }
 }
 
+@font-face {
+  font-family: "CustomFont"; /*Can be any text*/
+  src: url("./fonts/font.otf") format("truetype");
+}
+
 @layer base {
   @font-face {
     font-family: "Rubik";

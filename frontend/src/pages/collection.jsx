@@ -2,38 +2,6 @@ import React, { Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-/*    {
-      url: "https://static.vecteezy.com/system/resources/thumbnails/002/002/403/small/man-with-beard-avatar-character-isolated-icon-free-vector.jpg",
-      name: "santa",
-      type: "animal",
-      colour: "yellow",
-    },
-    {
-      url: "https://static.vecteezy.com/system/resources/thumbnails/021/770/056/small/avatar-of-a-student-character-free-vector.jpg",
-      name: "rudoplh",
-      type: "obj",
-      colour: "1da1f2",
-    },
-    {
-      url: "https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
-      name: "candycane",
-      type: "animal",
-      colour: "ff0000",
-    },
-    {
-      url: "https://static.vecteezy.com/system/resources/thumbnails/008/846/297/small/cute-boy-avatar-png.png",
-      name: "deer",
-      type: "obj",
-      colour: "ffff00",
-    },
-    {
-      url: "https://static.vecteezy.com/system/resources/thumbnails/008/846/297/small/cute-boy-avatar-png.png",
-      name: "deer",
-      type: "obj",
-    },
-*/
-//hard tests ^
-
 function Collection() {
   const [display, setDisplay] = useState("All");
 
@@ -55,13 +23,13 @@ function Collection() {
       <ul className="w-full">
         <button
           className="w-1/3 font-mono border-solid border-2 border-slate-400 bg-white py-5 text-lg font-bold"
-          onClick={() => setDisplay("land")}
+          onClick={() => setDisplay("Land")}
         >
           Land
         </button>
         <button
           className="w-1/3 font-mono order-solid border-2 border-slate-400 bg-white py-5 text-lg font-bold"
-          onClick={() => setDisplay("aquatic")}
+          onClick={() => setDisplay("Aquatic")}
         >
           Aquatic
         </button>
