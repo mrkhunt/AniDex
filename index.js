@@ -190,38 +190,46 @@ app.post("/api/saveImage", async (req, res) => {
   }
 });
 
-// app.get("/api/generateStory", async (req, res) => {
-//   try {
-//     // Define prompt and generate story
-//     const prompt = req.query.prompt;
-//     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-//     const result = await model.generateContent(prompt);
-//     const response = await result.response;
-//     const text = await response.text();
 
-//     // Send the generated story in the response
-//     res.send({ success: true, story: text });
-//   } catch (error) {
-//     console.error("Error generating story:", error);
-//     res.status(500).send("Error generating story");
-//   }
-// });
+app.get("/api/generateStory", async (req, res) => {
+  try {
+    // Define prompt
+    const prompt = req.query.prompt;
+    console.log("Prompt:", prompt);
 
-// app.post("/api/saveChat", async (req, res) => {
-//   try {
-//     const { chatlog } = req.body;
+    // Generate story based on the prompt using the instantiated generative model
+    const model = vertex_ai.preview.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(prompt);
+    const response = result.response;
 
-//     // Assuming `chatlog` is an array of chat messages
-//     // Iterate through each message and save it to Firestore
-//     for (const message of chatlog) {
-//       // Add the message to the "chatlog" collection in Firestore
-//       await addDoc(collection(db, "chatlog"), message);
-//     }
+    // Send the generated story in the response
+    if (response.candidates && response.candidates.length > 0) {
+      // Access the first candidate's content
+      const generatedContent = response.candidates[0].content;
+      console.log("Generated Content:", generatedContent);
+      res.send({ success: true, story: generatedContent });
+    }
+  } catch (error) {
+    console.error("Error generating story:", error);
+    res.status(500).send("Error generating story");
+  }
+});
 
-//     console.log("Chat log saved successfully");
-//     res.send({ success: true, message: "Chat log saved successfully" });
-//   } catch (error) {
-//     console.error("Error saving chat log:", error);
-//     res.status(500).send("Error saving chat log");
-//   }
-// });
+app.post("/api/saveChat", async (req, res) => {
+  try {
+    const { chatlog } = req.body;
+
+    // Assuming `chatlog` is an array of chat messages
+    // Iterate through each message and save it to Firestore
+    for (const message of chatlog) {
+      // Add the message to the "chatlog" collection in Firestore
+      await addDoc(collection(db, "chatlog"), message);
+    }
+
+    console.log("Chat log saved successfully");
+    res.send({ success: true, message: "Chat log saved successfully" });
+  } catch (error) {
+    console.error("Error saving chat log:", error);
+    res.status(500).send("Error saving chat log");
+  }
+});
