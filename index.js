@@ -108,7 +108,7 @@ app.post("/api/saveImage", async (req, res) => {
           parts: [
             image,
             {
-              text: `Look at this object. Find me the name of this thing as well as classify whether it is an animal or object. If it is an animal, the name of it must be a specific species of this animal. Additionally, I would like you to derive what surroundings(sea, forest, desert, arctic) this thing is usually found in and extract the set the colour based on that surroundings(STRICTLY blue for sea, green for forest, brown for desert, white for arctic). Please return strictly a JSON object with the keys name, type (object or animal) and colour of the surroundings. Your return must strictly start and end with curly braces only. The format of return has the keys : name: name of thing, type: type, colour: colour of surroundings.
+              text: `Look at this thing. Find me the name of this thing as well as classify whether it is an animal or object. If it is an animal, the name of it must be a specific species of this animal. Additionally, I would like you to derive what surroundings(sea, forest, desert, arctic) this thing is usually found in and extract the set the colour based on that surroundings(STRICTLY blue for sea, green for forest, brown for desert, white for arctic). If it is an object, the colour will be white. Please return strictly a JSON object with the keys name, type (object or animal) and colour of the surroundings. Your return must strictly start and end with curly braces only. The format of return has the keys : name: name of thing, type: type, colour: colour of surroundings.
               `,
             },
           ],
