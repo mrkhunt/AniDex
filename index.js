@@ -16,12 +16,11 @@ import {
   getDocs,
   addDoc,
 } from "firebase/firestore";
-const port = process.env.PORT || 8080;
-
-// Load all API keys
 import dotenv from "dotenv";
 import { log } from "console";
 dotenv.config();
+const port = process.env.PORT || 8080;
+
 // Reverse geocoding API key from env
 const geocodeApiKey = process.env.GOOGLE_MAPS_API_KEY;
 const openaiAPIKey = process.env.OPENAI_API_KEY;
@@ -66,7 +65,7 @@ const generativeModel = vertex_ai.preview.getGenerativeModel({
 });
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAHV0TnOOOuax-DJPjLvgTW-wB7qfvqp_Y",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "genesisai-418720.firebaseapp.com",
   projectId: "genesisai-418720",
   storageBucket: "genesisai-418720.appspot.com",

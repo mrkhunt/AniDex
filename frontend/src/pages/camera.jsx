@@ -20,6 +20,7 @@ const CameraPage = () => {
     navigator.mediaDevices
       .getUserMedia({
         video: {
+          facingMode: "environment",
           width: 400,
           height: 400,
         },
