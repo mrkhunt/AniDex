@@ -14,7 +14,7 @@ const CameraPage = () => {
   const [image, setImage] = useState(null);
   const [hasPhoto, setHasPhoto] = useState(false);
 
-  
+  const [loading, setLoading] = useState(false);
 
   const getVideo = () => {
     navigator.mediaDevices
@@ -70,6 +70,7 @@ const CameraPage = () => {
   };
 
   const redoPhoto = () => {
+    setLoading(false);
     setHasPhoto(false);
     // Clear the canvas if needed. Example:
     let photo = photoRef.current;
@@ -80,6 +81,7 @@ const CameraPage = () => {
   };
 
   const sendPhotoToBackend = async () => {
+    setLoading(true);
     try {
       let date = new Date().toISOString();
 
@@ -93,11 +95,6 @@ const CameraPage = () => {
           date: date,
         })
         .then((response) => {
-          toaster.push(
-            <Message type="success" closable>
-              Added to AnyDex!
-            </Message>
-          );
           alert("Added to AnyDex!");
 
           redoPhoto();
@@ -128,7 +125,16 @@ const CameraPage = () => {
 
   return (
     <div className="h-screen flex flex-col items-center">
-      {!hasPhoto && (
+      {loading && (
+        <div className="flex flex-col justify-center items-center gap-3 mt-8 mb-3 bg-transparent">
+          <img
+            className="mt-6"
+            src="https://media.tenor.com/yRSnf6wABQ4AAAAi/pato-duck.gif"
+          />
+          <p className="text-2xl">Loading...</p>
+        </div>
+      )}
+      {!hasPhoto && !loading && (
         <div>
           <div className="flex justify-center gap-3 mt-8 mb-3 bg-transparent">
             <video
@@ -150,14 +156,18 @@ const CameraPage = () => {
           </div>
         </div>
       )}
+
       <div className="flex justify-center gap-3 mt-8 rounded-2xl">
         <canvas
           ref={photoRef}
           height={0}
-          className="max-w-[80vw] max-h-[60vh] aspect-auto rounded-2xl"
+          className={`max-w-[80vw] max-h-[60vh] rounded-2xl ${
+            loading ? "hidden" : "block"
+          }`}
         />
       </div>
-      {hasPhoto && (
+
+      {hasPhoto && !loading && (
         <div>
           <div className="flex justify-center gap-10 mt-10">
             <Button appearance="primary" color="red" onClick={redoPhoto}>
@@ -167,6 +177,7 @@ const CameraPage = () => {
               appearance="primary"
               color="green"
               onClick={() => sendPhotoToBackend()}
+              loading={loading}
             >
               <Icon as={FaCheck} /> Confirm
             </Button>

@@ -143,6 +143,8 @@ app.post("/api/saveImage", async (req, res) => {
       // Remove ```json and ``` from the string
       const jsonString = geminiReturnObject.candidates[0].content.parts[0].text;
       const cleanedString = jsonString
+        .replace("JSON", "")
+        .replace("```JSON", "")
         .replace("```json", "")
         .replace("```", "")
         .replace("```", "");
